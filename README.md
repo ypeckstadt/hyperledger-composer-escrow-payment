@@ -31,5 +31,5 @@ A few steps I added:
 * much easier to deploy compared to normal Hyperledger Fabric chaincode deployment and development.
 
 ## Todo
-* I have not implemented ACL rules or unit tests for it.  However all is in place to easily test ACL rules.
+* I have not implemented ACL rules or unit tests for it.　If done a lot of the transaction code will move to ACL when it comes to the checks.   However all is in place to easily test ACL rules.  As a next step I will create a more ACL focussed version.
 * need to add cucumber tests
