@@ -1,0 +1,6 @@
+query selectEscrowAccountsForTrader {
+  description: "Select escrow accounts for trader"
+  statement:
+      SELECT org.finance.payment.EscrowAccount
+        WHERE (trader == _$trader)
+}

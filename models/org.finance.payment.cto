@@ -1,0 +1,123 @@
+namespace org.finance.payment
+
+participant Trader identified by id {
+    o String id
+    o String firstName
+    o String lastName
+    o String email
+    o Double balance default=0.0 optional
+}
+
+asset Item identified by id {
+    o String id
+    o String name
+    o Double salesPrice
+}
+
+asset Trade identified by id {
+    o String id
+    --> Trader buyer
+    --> Trader seller
+    o Boolean isEscrowPayment
+    --> Item[] items
+    o DateTime timestamp
+    o TradeStatus status
+    o Boolean hasBuyerAcceptedTerms default=false
+    o Boolean hasSellerAcceptedTerms default=false
+    --> Trader cancelledBy optional
+    o Boolean isAutoPay default=false
+    o Double total
+    --> EscrowAccount escrowAccount optional
+}
+
+asset EscrowAccount identified by id {
+    o String id
+    --> Trader trader
+    o Double balance default=0.0
+}
+
+enum TradeStatus {
+    o STEP_1_WAITING_FOR_TERMS_AGREEMENT
+    o STEP_1_DIRECT_PAYMENT_COMPLETED
+    o STEP_2_TERMS_NOT_ACCEPTED
+    o STEP_2_TERMS_ACCEPTED
+    o STEP_3_BUYER_MOVED_FUNDS_TO_ESCROW
+    o STEP_4_MERCHANDISE_IS_SHIPPED
+    o STEP_5_MERCHANDISE_IS_ACCEPTED_AND_SELLER_IS_PAID
+    o STEP_0_CANCELLED_BY_BUYER
+    o STEP_0_CANCELLED_BY_SELLER
+}
+
+transaction AgreeTerms {
+    --> Trader trader
+    --> Trade trade
+    o Boolean isAccepted
+}
+
+transaction StartTrade {
+    --> Trader trader
+    --> Item[] items
+    o Boolean isEscrowPayment
+    o Boolean isStartedBySeller default=false
+    o Boolean isAutoPay default=false
+}
+
+transaction ShipMerchandise {
+    --> Trade trade
+}
+
+transaction AcceptMerchandise {
+    --> Trade trade
+}
+
+transaction PayEscrow {
+    --> Trade trade
+}
+
+transaction CancelTrade {
+    --> Trade trade
+}
+
+event BuyerAgreedToTermsEvent {
+    --> Trade trade
+    --> Trader trader
+}
+
+event SellerAgreedToTermsEvent {
+    --> Trade trade
+    --> Trader trader
+}
+
+event BothPartiesAgreedToTermsEvent {
+    --> Trade trade
+}
+
+event TraderDidNotAgreeTermsEvent {
+    --> Trade trade
+    --> Trader trader
+}
+
+event BuyerPaidEscrowEvent {
+    --> Trade trade
+}
+
+event BuyerAcceptedMerchandiseEvent {
+    --> Trade trade
+}
+
+event MerchandiseIsShippedEvent {
+    --> Trade trade
+}
+
+event TraderCancelledTradeEvent {
+    --> Trade trade
+    --> Trader trader
+}
+
+event TraderStartsTradeEvent {
+    --> Trade trade
+    --> Trader trader
+    o Boolean isEscrowPayment
+}
+
+
